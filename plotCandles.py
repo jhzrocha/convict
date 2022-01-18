@@ -1,21 +1,18 @@
 import matplotlib.pyplot as plt
 import pandas as pd
 
-from controller import ClasseConexao
 
 class GraficPlotter:
 
-    def plotAllCandles(self, companyCode):
-        conexao = ClasseConexao('localhost' ,'root', '','convict')
-        
-        prices = pd.DataFrame({'open': conexao.getAllOpenValues(companyCode),
-                       'close': conexao.getAllCloseValues(companyCode),
-                       'high': conexao.getAllHighValues(companyCode),
-                       'low': conexao.getAllLowValues(companyCode)},
-                       index=pd.date_range("2021-01-01", periods=len(conexao.getAllLowValues(companyCode)), freq="d"))
+    def plotCandles(self, openValues, closeValues, highValues,lowValues):
+        prices = pd.DataFrame({'open': openValues,
+                       'close': closeValues,
+                       'high': highValues,
+                       'low': lowValues},
+                       index=pd.date_range("2021-01-01", periods=len(lowValues), freq="d"))
         #create figure
-        conexao.desconectar();
-        plt.figure()
+      
+        fig = plt.figure()       
 
         #define width of candlestick elements
         width = .4
@@ -40,7 +37,7 @@ class GraficPlotter:
 
         #rotate x-axis tick labels
         plt.xticks(rotation=45, ha='right')
-
+      
         #display candlestick chart
         plt.show()
 

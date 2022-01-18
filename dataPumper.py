@@ -1,35 +1,32 @@
-import matplotlib.pyplot as plt
-import numpy as np
-import pandas as pd
 import pandas_datareader as web
-import seaborn as sns
 import yfinance as yf
 import warnings
-from mpl_finance import candlestick_ohlc
+from model import mySQLconnection
 
-from controller import ClasseConexao
-from plotCandles import GraficPlotter
 
-conexao = ClasseConexao('localhost' ,'root', '','convict')
+class DataPumper():
 
-warnings.filterwarnings('ignore')
-yf.pdr_override()
+    def __init__(self,companyCode):
+        self.companyCode = companyCode
+        self.companyCodeyfBR = companyCode + '.SA'
+        self.conexao = mySQLconnection()
+        self.closeValue= web.get_data_yahoo(self.companyCodeyfBR, start='1980-01-01')["Close"]
+        self.openValue= web.get_data_yahoo(self.companyCodeyfBR, start='1980-01-01')["Open"]
+        self.lowerValue = web.get_data_yahoo(self.companyCodeyfBR, start='1980-01-01')["Low"]
+        self.HigherValue = web.get_data_yahoo(self.companyCodeyfBR, start='1980-01-01')["High"]
+        self.volume = web.get_data_yahoo(self.companyCodeyfBR, start='1980-01-01')["Volume"]
+        self.adjCloseValue = web.get_data_yahoo(self.companyCodeyfBR, start='1980-01-01')["Adj Close"]    
+        warnings.filterwarnings('ignore')
+        yf.pdr_override()
 
-companyCode = "FIQE3"
-companyCodeyfBR = companyCode + ".SA"
+    def createTable(self):
+        self.conexao.createTable(self.companyCode)
 
-closeValue= web.get_data_yahoo(companyCodeyfBR, start='1980-01-01')["Close"]
-openValue= web.get_data_yahoo(companyCodeyfBR, start='1980-01-01')["Open"]
-lowerValue = web.get_data_yahoo(companyCodeyfBR, start='1980-01-01')["Low"]
-HigherValue = web.get_data_yahoo(companyCodeyfBR, start='1980-01-01')["High"]
-volume = web.get_data_yahoo(companyCodeyfBR, start='1980-01-01')["Volume"]
-adjCloseValue = web.get_data_yahoo(companyCodeyfBR, start='1980-01-01')["Adj Close"]
+        for x in range(len(self.closeValue + 1)):
+            variation = ((self.closeValue[x] - self.closeValue[x - 1])/self.closeValue[x-1])*100
+            self.conexao.insertData(self.companyCode, self.openValue[x], self.closeValue[x], self.HigherValue[x], self.lowerValue[x], self.volume[x], variation,self.adjCloseValue[x])
 
-grafic = GraficPlotter().plotAllCandles(companyCode)
 
-# conexao.createTable(companyCode)
 
-# for x in range(len(closeValue + 1)):
-#     variation = ((closeValue[x] - closeValue[x - 1])/closeValue[x-1])*100
-#     conexao.insertData(companyCode, openValue[x], closeValue[x], HigherValue[x], lowerValue[x], volume[x], variation,adjCloseValue[x])
+
 
