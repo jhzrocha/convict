@@ -21,12 +21,15 @@ class Analyzer():
                 head = close - openValue
                 tail = openValue - low
                 if (head > 0):
-                        if((tail/head > 2.5) and (head > tail/3) and ((high-close)/head)> 0.3):
+                        # Adicionar a proporção de head do candle
+                        if((tail/head > 2.5)  and (((high-close)/head)< 2) and (tail/3 < head)):
                             highHammer.append(high)
                             lowHammer.append(low)
                             openHammer.append(openValue)
                             closeHammer.append(close)
-
-        hammerDatas = [highHammer,lowHammer,openHammer,closeHammer]
         
+        hammerDatas = {'high':highHammer,
+                        'low': lowHammer,
+                        'open':openHammer,
+                        'close':closeHammer}        
         return hammerDatas
