@@ -101,5 +101,4 @@ class mySQLconnection:
         cursorResult = cursor.fetchone()
         return cursorResult
 
-        
-                    
+    

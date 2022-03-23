@@ -4,7 +4,7 @@ import warnings
 from model import mySQLconnection
 
 
-class DataPumper():
+class CompanyDataPumper():
 
     def __init__(self,companyCode):
         self.companyCode = companyCode
@@ -19,7 +19,7 @@ class DataPumper():
         warnings.filterwarnings('ignore')
         yf.pdr_override()
 
-    def createTable(self):
+    def createTableAndAddData(self):
         self.conexao.createTable(self.companyCode)
 
         for x in range(len(self.closeValue + 1)):

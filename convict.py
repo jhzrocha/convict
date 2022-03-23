@@ -1,9 +1,9 @@
-from controller import controller
+from controller import Controller
 
-class Analyzer():
+class Convict():
 
-    def candleIdentifier(self,companyCode):
-        companyData = controller().getAllCompanyDatas(companyCode)
+    def hammerIdentifier(self,companyCode):
+        companyData = Controller().getAllCompanyDatas(companyCode)
         
         highHammer = []
         lowHammer = []
@@ -32,4 +32,15 @@ class Analyzer():
                         'low': lowHammer,
                         'open':openHammer,
                         'close':closeHammer}        
+        
         return hammerDatas
+
+    def priceTrendByAveragePrice(self, companyCode):
+        
+        averageDayPrices = Controller().getAverageDayPrice(companyCode)
+        dayPriceDifference = []
+        for price in range(len(averageDayPrices) - 1):
+            dayPriceDifference.append((averageDayPrices[price] - averageDayPrices[price + 1])/averageDayPrices[price])
+
+        print(dayPriceDifference)    
+        return dayPriceDifference
