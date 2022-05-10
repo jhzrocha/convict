@@ -27,7 +27,7 @@ class mySQLconnection:
     def createTable(self,CompanyName):
         cursor = self.conn.cursor()
         
-        sql = "CREATE TABLE " + CompanyName+ " (open FLOAT(24), close FLOAT(24), high FLOAT(24), low FLOAT(24), volume FLOAT(24), variation FLOAT(24) ,adjClose FLOAT(24));"
+        sql = "CREATE OR REPLACE TABLE " + CompanyName+ " (open FLOAT(24), close FLOAT(24), high FLOAT(24), low FLOAT(24), volume FLOAT(24), variation FLOAT(24) ,adjClose FLOAT(24));"
         cursor.execute(sql)
         self.conn.commit()
 

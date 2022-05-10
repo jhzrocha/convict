@@ -1,3 +1,5 @@
+from asyncio.windows_events import NULL
+from numpy import average
 from controller import Controller
 
 class Convict():
@@ -35,12 +37,37 @@ class Convict():
         
         return hammerDatas
 
-    def priceTrendByAveragePrice(self, companyCode):
+    def percDifferenceDailyAvgPrice(self, companyCode):
         
-        averageDayPrices = Controller().getAverageDayPrice(companyCode)
+        averageDayPrices = Controller().getAverageDayPrices(companyCode)
         dayPriceDifference = []
         for price in range(len(averageDayPrices) - 1):
             dayPriceDifference.append((averageDayPrices[price] - averageDayPrices[price + 1])/averageDayPrices[price])
 
-        print(dayPriceDifference)    
         return dayPriceDifference
+
+    def getValleyAndPeaks(self, companyCode):
+        averageDayPrices = Controller().getAverageDayPrices(companyCode)
+        dayPriceDifference = []
+        peaks = [[]]
+        valleys = [[]]
+
+        for price in range(len(averageDayPrices) - 1):            
+                if(averageDayPrices[price] > averageDayPrices[price + 1]):
+                    dayPriceDifference.append('-')
+                elif(averageDayPrices[price] < averageDayPrices[price + 1]):
+                    dayPriceDifference.append('+')
+                else:
+                    dayPriceDifference.append('=')
+        for oscilation in range(len(dayPriceDifference)-1):
+            if(dayPriceDifference[oscilation] == '+' and dayPriceDifference[oscilation + 1] == '-'):
+                peak = [oscilation,averageDayPrices[oscilation]]
+                peaks.append(peak)
+            if(dayPriceDifference[oscilation] == '-' and dayPriceDifference[oscilation + 1] == '+'):
+                valley = [oscilation , averageDayPrices[oscilation]]
+                valleys.append(valley)
+        result = {'peaks': peaks, "valleys" : valleys}
+            
+        return result
+
+        

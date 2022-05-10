@@ -4,14 +4,18 @@ from controller import Controller
 from dataPumper import CompanyDataPumper
 
 
-companyCode = 'MGLU3'
+companyCode = 'ALSO3'
 
-# CompanyDataPumper('MGLU3').createTableAndAddData()
+# CompanyDataPumper('ALSO3').createTableAndAddData()
+# Convict().getDailyOscilation(companyCode)
+print(Convict().getPeaksPositonAndValues(companyCode))
+
 
 # hammers = Controller().getAllCompanyDatas(companyCode)
 
 # GraficPlotter().plotCandles(hammers['open'],hammers['close'],hammers['high'], hammers['low'])
-GraficPlotter().lineGrafic(Convict().priceTrendByAveragePrice(companyCode))
+# Controller().getAverageDayPrices('also3')
+GraficPlotter().lineGrafic(Controller().getAverageDayPrices('also3'))
 
 
 

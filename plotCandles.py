@@ -42,25 +42,23 @@ class GraficPlotter:
         #display candlestick chart
         plt.show()
 
-    def lineGrafic(self, dataArray):
-        plt.style.use('_mpl-gallery')
-
-# make data
-        npDataArray = np.array(dataArray)
-        x = np.sort(npDataArray)
-        y = npDataArray
-
-        fig, ax = plt.subplots()
-
-        zero = 0
-
-        supper = np.ma.masked_where(y > zero, y)
-        slower = np.ma.masked_where(y < zero, y)
-        zeroValues = np.ma.masked_where(y == zero, y)
-        ax.plot(x, zeroValues, x, slower, x, supper)
-  
-
-        # ax.set(xlim=(0, len(dataArray)), xticks=np.arange(1, 8),
-        #     ylim=(-0.4, 0.4), yticks=np.arange(-0.4, 0.4))
+    def lineGrafic(self, dataArray, titleName = 'Graph'):
+        plt.rcParams['lines.linewidth'] = 2
+        data = np.array(dataArray)
+        
+        plt.plot(data)
+        plt.yscale('linear')
+        plt.title(titleName)
+        plt.grid(True)
 
         plt.show()
+
+    # def lineGraficPeaksAndValleys(self, dataArray, peaksAndValleys, graphtitle = 'Graph'):
+    #     data = np.array(dataArray)
+        
+    #     plt.plot(data)
+
+    #     for peak in range(len(averageDayPrices) - 1):
+    #     plt.yscale('linear')
+    #     plt.title(graphtitle)
+    #     plt.grid(True)

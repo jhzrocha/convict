@@ -20,7 +20,7 @@ class Controller():
             indexes.append(index)
         return indexes
     
-    def getAverageDayPrice(self, companyCode):
+    def getAverageDayPrices(self, companyCode):
         lowPrices = mySQLconnection().getAllLowValues(companyCode)
         highPrices = mySQLconnection().getAllHighValues(companyCode)
 
