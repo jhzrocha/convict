@@ -8,14 +8,14 @@ companyCode = 'ALSO3'
 
 # CompanyDataPumper('ALSO3').createTableAndAddData()
 # Convict().getDailyOscilation(companyCode)
-print(Convict().getPeaksPositonAndValues(companyCode))
+peaksAndValleys = Convict().getValleyAndPeaks(companyCode)
 
 
 # hammers = Controller().getAllCompanyDatas(companyCode)
 
 # GraficPlotter().plotCandles(hammers['open'],hammers['close'],hammers['high'], hammers['low'])
 # Controller().getAverageDayPrices('also3')
-GraficPlotter().lineGrafic(Controller().getAverageDayPrices('also3'))
+GraficPlotter().lineGraficPeaksAndValleys(Controller().getAverageDayPrices('also3'),peaksAndValleys)
 
 
 

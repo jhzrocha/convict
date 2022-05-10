@@ -53,12 +53,21 @@ class GraficPlotter:
 
         plt.show()
 
-    # def lineGraficPeaksAndValleys(self, dataArray, peaksAndValleys, graphtitle = 'Graph'):
-    #     data = np.array(dataArray)
-        
-    #     plt.plot(data)
+    def lineGraficPeaksAndValleys(self, dataArray, peaksAndValleys, graphtitle = 'Graph'):
+        plt.rcParams['lines.linewidth'] = 2
+        data = np.array(dataArray)
+        peaksIDs = np.array(peaksAndValleys["peaksPositions"])
+        peaksValues = np.array(peaksAndValleys["peaksValues"])
 
-    #     for peak in range(len(averageDayPrices) - 1):
-    #     plt.yscale('linear')
-    #     plt.title(graphtitle)
-    #     plt.grid(True)
+        valleysIDs = np.array(peaksAndValleys["valleysPositions"])
+        valleysValues = np.array(peaksAndValleys["valleysValues"])
+       
+        plt.plot(data)
+        plt.yscale('linear')
+        plt.title(graphtitle)
+        plt.plot(peaksIDs,peaksValues,"o") 
+        plt.plot(valleysIDs,valleysValues,'bo') 
+
+        plt.grid(True)
+
+        plt.show()

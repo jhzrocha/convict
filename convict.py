@@ -49,9 +49,11 @@ class Convict():
     def getValleyAndPeaks(self, companyCode):
         averageDayPrices = Controller().getAverageDayPrices(companyCode)
         dayPriceDifference = []
-        peaks = [[]]
-        valleys = [[]]
-
+        peaksPositions = []
+        valleysPositions = []
+        peaksValues = []
+        valleysValues = []
+        contValoresIguais = 0
         for price in range(len(averageDayPrices) - 1):            
                 if(averageDayPrices[price] > averageDayPrices[price + 1]):
                     dayPriceDifference.append('-')
@@ -59,15 +61,17 @@ class Convict():
                     dayPriceDifference.append('+')
                 else:
                     dayPriceDifference.append('=')
+                    contValoresIguais = contValoresIguais + 1
         for oscilation in range(len(dayPriceDifference)-1):
             if(dayPriceDifference[oscilation] == '+' and dayPriceDifference[oscilation + 1] == '-'):
-                peak = [oscilation,averageDayPrices[oscilation]]
-                peaks.append(peak)
+                peaksPositions.append(oscilation + 1)
+                peaksValues.append( averageDayPrices[oscilation + 1])
             if(dayPriceDifference[oscilation] == '-' and dayPriceDifference[oscilation + 1] == '+'):
-                valley = [oscilation , averageDayPrices[oscilation]]
-                valleys.append(valley)
-        result = {'peaks': peaks, "valleys" : valleys}
-            
+                valleysPositions.append(oscilation + 1)
+                valleysValues.append(averageDayPrices[oscilation + 1])
+
+        result = {'peaksPositions': peaksPositions, "valleysPositions" : valleysPositions, "peaksValues":peaksValues,"valleysValues":valleysValues}
+        print(contValoresIguais)
         return result
 
         
