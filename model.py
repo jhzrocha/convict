@@ -1,6 +1,8 @@
-import mysql.connector
+from mysql.connector import (connection)
 from enums import connectionData
- 
+import time 
+import pandas as pd
+
 class mySQLconnection:
     def __init__(self):
  
@@ -8,7 +10,10 @@ class mySQLconnection:
         self.usuario = connectionData.user
         self.senha = connectionData.password
         self.banco = connectionData.dataBaseName
-        self.conn = mysql.connector.connect(host=self.host,username=self.usuario, password=self.senha, database = self.banco)
+        self.conn = connection.MySQLConnection(user=self.usuario, 
+                                               password= self.senha,
+                                               host=self.host,
+                                               database=self.banco)
         if (self.conn.is_connected):
             print("Conexão com o banco de dados " + self.conn.database + " foi bem sucedida")
             
@@ -100,5 +105,44 @@ class mySQLconnection:
         cursor.execute("SELECT COUNT(volume) from "+ companyCode + " ;")
         cursorResult = cursor.fetchone()
         return cursorResult
+    
+    def createAtivosTable(self):
+        cursor = self.conn.cursor()        
+        sql = "CREATE OR REPLACE TABLE ATIVOS (nr_sequencia int primary key AUTO_INCREMENT NOT NULL, cd_ativo VARCHAR(50) NOT NULL, nm_ativo varchar(100), qt_volume_total float(30));"
+        cursor.execute(sql)
+        self.conn.commit()
 
+    
+    def insertAtivoData(self, cd_ativo, ds_tipo , ds_sgt_name , ds_sqt_mk, cd_type ,nm_ativo, qt_volume_total):
+        cursor = self.conn.cursor()
+        sql = "INSERT INTO ativos (cd_ativo, ds_tipo , ds_sgt_name , ds_sqt_mkt,cd_type, nm_ativo, qt_volume_total) VALUES ('"+ str(cd_ativo) + "','" + str(ds_tipo) + "','" + str(ds_sgt_name) + "','" + str(ds_sqt_mk) + "','" + str(cd_type) +  "','" + str(nm_ativo) + "','"+ str(qt_volume_total) + "');"
+        cursor.execute(sql)       
+        self.conn.commit()
+
+    def addAndInsertAtivoData(self):
+        ativosData = pd.read_excel('B3_Ativos.xlsx', sheet_name='B3_Ativos', usecols="B,D,E,F,G,AV,AY")
+        cursor = self.conn.cursor()        
+        sql = "CREATE OR REPLACE TABLE ATIVOS (nr_sequencia int primary key AUTO_INCREMENT NOT NULL, cd_ativo VARCHAR(50) NOT NULL, ds_tipo varchar(250), ds_sgt_name varchar(60), ds_sqt_mkt varchar(30), cd_type varchar(60) ,nm_ativo varchar(100), qt_volume_total varchar(30));"
+        cursor.execute(sql)
+        self.conn.commit()
+        
+        for i in range(len(ativosData)):
+            self.insertAtivoData(str(ativosData.get('TckrSymb')[i]),
+                                 str(ativosData.get('AsstDesc')[i]),
+                                 str(ativosData.get('SgmtNm')[i]),
+                                 str(ativosData.get('MktNm')[i]),
+                                 str(ativosData.get('SctyCtgyNm')[i]),
+                                 str(ativosData.get('CrpnNm')[i]),
+                                 str(ativosData.get('MktCptlstn')[i]))
+            print(str(ativosData.get('TckrSymb')[i]) + '- Dado adicionado na tabela Ativos')
+        
+    def getAllCompanyCodes(self):
+        cursor = self.conn.cursor()
+        cursor.execute("SELECT  cd_ativo from ativos where cd_type = 'SHARES';")
+        cursorResults = cursor.fetchall() 
+        results = []
+        for result in cursorResults:
+            results.append(result[0])            
+        return results  
+        
     

@@ -1,4 +1,6 @@
 from model import mySQLconnection
+import pandas as pd
+from dataPumper import CompanyDataPumper
 
 class Controller():
 
@@ -30,3 +32,15 @@ class Controller():
             averageDayPrice.append((highPrices[day] + lowPrices[day])/2)
         
         return averageDayPrice
+    
+    def createAndInsertAtivos(self):
+        mySQLconnection().addAndInsertAtivoData()
+
+    def getAllCompanyCodes(self):
+        return mySQLconnection().getAllCompanyCodes()
+    
+    def createSharesTables(self):
+        for shareCode in self.getAllCompanyCodes():
+            CompanyDataPumper(shareCode).createTableAndAddData()
+
+        
