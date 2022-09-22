@@ -41,6 +41,10 @@ class Controller():
     
     def createSharesTables(self):
         for shareCode in self.getAllCompanyCodes():
-            CompanyDataPumper(shareCode).createTableAndAddData()
+            try:
+                CompanyDataPumper(shareCode).createTableAndAddData()
+            except:
+                print('Erro no código ' + shareCode)
+
 
         

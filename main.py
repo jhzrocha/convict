@@ -3,13 +3,27 @@ from convict import Convict
 from controller import Controller
 from dataPumper import CompanyDataPumper
 from model import mySQLconnection
+import pandas_datareader as web
 import pandas as pd
+import yfinance as yf
+from enums import sectors
 
-companyCode = 'ALSO3'
+# companyCode = 'PETR4.SA'
+
+mySQLconnection().addAndInsertSectorTypesData()
+# data = yf.Ticker(companyCode)
+# for i in sectors.sectorTypes:
+#     for j in i:
+#         for x in i.get(j):
+#             mySQLconnection().insertSubSectorType(x,j)
+#print(data.history(period="max")['Open'])
+#print(web.get_data_yahoo(companyCode, start='1980-01-01'))
+
+#print(mySQLconnection().getAllCompanyCodes())
+#Controller().createSharesTables()
 
 
-Controller().createSharesTables()
-
+#CompanyDataPumper('PETR4').createTableAndAddData()
 #Convict().getDailyOscilation(companyCode)
 # peaksAndValleys = Convict().getValleyAndPeaks(companyCode)
 

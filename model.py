@@ -1,5 +1,6 @@
 from mysql.connector import (connection)
 from enums import connectionData
+from enums import sectors
 import time 
 import pandas as pd
 
@@ -144,5 +145,34 @@ class mySQLconnection:
         for result in cursorResults:
             results.append(result[0])            
         return results  
+    
+    def insertSectorType(self, ds_sector_type):
+        cursor = self.conn.cursor()
+        sql = "INSERT INTO Setores (ds_sector_type) VALUES ('"+ str(ds_sector_type) + "');"
+        cursor.execute(sql)       
+        self.conn.commit()
+    
+    def insertSubSectorType(self, ds_subsector_type, ds_sector_type):
+        cursor = self.conn.cursor()
+        sql = "INSERT INTO Subsetores (ds_subsector_type,nr_seq_sector) VALUES ('"+ str(ds_subsector_type) + "', (select nr_sequencia from setores where ds_sector_type = '" + str(ds_sector_type) +"')"");"
+        cursor.execute(sql)       
+        self.conn.commit()
+
+    def createSubSectorTable(self):
+        cursor = self.conn.cursor()        
+        sql = "CREATE OR REPLACE TABLE Subsetores (nr_sequencia int primary key AUTO_INCREMENT NOT NULL, ds_subsector_type VARCHAR(150) NOT NULL, nr_seq_sector int);"
+        cursor.execute(sql)
+        self.conn.commit()
+    
+    def addAndInsertSectorTypesData(self):
+        cursor = self.conn.cursor()        
+        sql = "CREATE OR REPLACE TABLE Setores (nr_sequencia int primary key AUTO_INCREMENT NOT NULL, ds_sector_type VARCHAR(150) NOT NULL);"
+        cursor.execute(sql)
+        self.conn.commit()
+        for i in sectors.sectorTypes:
+            for j in i:        
+                self.insertSectorType(j)
+                for x in i.get(j):
+                    self.insertSubSectorType(x,j)
         
     
